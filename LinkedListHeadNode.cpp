@@ -55,7 +55,7 @@ bool ListDelete(LNode *L, int i, int &e) {
     LNode *q = p -> next;  // 新建一个指针q，指向被删除的结点
     e = q -> data;  // 用e记录被删除结点的值
     p -> next = q -> next;  // 把被删除结点的前一个结点的next指向被删除结点的下一个结点
-    delete q;  // 是否被删除结点的空间
+    delete q;  // 释放被删除结点的空间
     return true;
 }
 
@@ -67,7 +67,7 @@ void PrintList(LNode *L) {
         std::cout << p -> data << " ";  // 打印出当前结点的数据域
         p = p -> next;  // 打印完p指针指向下一个结点
     }
-    std::cout << std::endl;
+    std::cout << std::endl;  // 换行
 }
 
 
@@ -86,7 +86,7 @@ int main() {
     TailInsert(L, 6);  // 尾插法插入6
     PrintList(L);  // 遍历打印单链表
 
-    ListDelete(L, 1, e);  // 删除第一个结点，并用e返回
+    ListDelete(L, 6, e);  // 删除第一个结点，并用e返回
     PrintList(L);  // 遍历打印单链表
     return 0;
 }
