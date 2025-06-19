@@ -85,6 +85,7 @@ void PrintList(CNode *L) {
 }
 
 
+// 测试
 int main() {
     CNode *L;  // 创建一个循环单链表 L
     int e;
