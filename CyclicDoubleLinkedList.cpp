@@ -71,7 +71,6 @@ bool ListDelete(CDNode *L, int i, int &e) {
 // 遍历打印循环双链表
 void PrintList(CDNode *L) {
     CDNode *p = L -> next;  // 设置一个指针 p ，指向第一个结点
-    int j = 0;  // 设置一个计时器，记录当前指向的结点，默认为 0 （带头结点）
     while(p != L) {
         std::cout << p -> data << " ";  // 遍历整个链表，同时输出结点的值
         p = p -> next;
