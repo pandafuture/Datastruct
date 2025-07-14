@@ -60,6 +60,34 @@ bool ListDelete(LNode *L, int i, int &e) {
 }
 
 
+// 交换位置（把第 i 个结点和前驱结点交换）
+bool Transform(LNode *L, int i) {
+    if(i < 1) 
+        return false;  // 判断输入是否合法
+
+    // 首先找到第 i 个结点的前驱结点的前驱结点
+    LNode *w = L;  // 新建一个指针，指向头结点
+    int j = 0;  // 设置一个计数器，记录当前指向第几个结点，默认为0， 指向头结点
+    while(w -> next && j < i - 2) {
+        w = w -> next;
+        j++;
+    }
+    if(!w -> next -> next) {
+        return false;
+    }
+    
+    LNode *q = w -> next;  // 新建一个指针 q ，指向第 i-1 个结点
+    LNode *p = q -> next;  // 新建一个指针 p ，指向第 i 个结点
+    LNode *e = p -> next;  // 新建一个指针 e ，指向第 i+1 个结点
+
+    w -> next = p;  // 先把第 i-2 个结点的next 指向第 i 个结点
+    p -> next = q;  // 把第 i 个结点的 next 指向第 i 个结点的前驱结点
+    q -> next = e; // 最后把第 i-1 个结点的next指向 第i+1个结点
+
+    return true;
+}
+
+
 // 遍历打印链表
 void PrintList(LNode *L) {
     LNode *p = L ->next;  // 新建一个指针p， 指向头结点后的第一个结点
@@ -81,6 +109,9 @@ int main() {
     HeadInsert(L, 3);  // 头插法插入3
     PrintList(L);  // 遍历打印单链表
 
+    Transform(L, 3);
+    PrintList(L);  // 遍历打印单链表
+
     TailInsert(L, 4);  // 尾插法插入4
     TailInsert(L, 5);  // 尾插法插入5
     TailInsert(L, 6);  // 尾插法插入6
@@ -88,5 +119,8 @@ int main() {
 
     ListDelete(L, 6, e);  // 删除第一个结点，并用e返回
     PrintList(L);  // 遍历打印单链表
+
+
+
     return 0;
 }
