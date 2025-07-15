@@ -44,9 +44,9 @@ bool ListInsert(DynamicSeqList &L, int i, int e) {
     // 判断插入位置是否合法，i必须在1~length+1之间
     if(i < 1 || i > L.length + 1) 
         return false;
-    // 判断表是否已满
+    // 判断表是否已满，若已满则增加表容量
     if(L.length >= L.maxSize)
-        return false;
+        IncreaseSize(L, 10);
 
     // 将第i个元素及其后面的元素往后移一个位置（从最后一个元素开始）
     for(int j = L.length; j >= i; j--) {
@@ -64,6 +64,7 @@ bool ListDelete(DynamicSeqList &L, int i, int &e) {
     // 判断删除位置是否合法，i必须要在1~length之间
     if(i < 1 || i > L.length)
         return false;
+        
     e = L.data[i -1];  // 保存被删除元素的值
 
     // 将第i个元素之后的所有元素前移一位（从第一个元素开始）
@@ -100,4 +101,33 @@ void PrintList(DynamicSeqList L) {
         std::cout << L.data[i] << " ";
     }
     std::cout << std::endl;
+}
+
+
+
+int main(){
+    DynamicSeqList L;  // 声明一个动态顺序表
+    InitList(L ,5);  // 初始化
+    int e;
+
+    ListInsert(L, 1, 1);  // 在第一个位置插入 1
+    ListInsert(L, 2, 2);
+    ListInsert(L, 3, 3);
+    ListInsert(L, 4, 4);
+    ListInsert(L, 5, 5);
+
+    PrintList(L);  // 打印顺序表
+
+    ListDelete(L, 2, e);
+    PrintList(L);
+
+    ListInsert(L, 2, 2);
+    PrintList(L);
+
+    ListInsert(L, 6, 6);  // 在超过表长的位置插入 6
+    PrintList(L);
+
+    std::cout << LocateElem(L, 3) << " ";  // 找到第一个值为 3 的位序
+
+    std::cout << GetElem(L, 6);  // 找到第六个元素的值
 }

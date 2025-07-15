@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define MAX_SIZE 100  // 定义静态顺序表的最大程度
+#define MAX_SIZE 100  // 定义静态顺序表的最大长度
 // 静态顺序表结构体
 struct StaticSeqList {
     int data[MAX_SIZE];  // 静态数组：用于存储顺序表的元素
