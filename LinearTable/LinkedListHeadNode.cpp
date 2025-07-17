@@ -14,6 +14,12 @@ void InitList(LNode *&L) {
 }
 
 
+// 判空
+bool Empty(LNode *L) {
+    return L -> next == nullptr;
+}
+
+
 // 头插法插入元素（在头结点之后插入）
 void HeadInsert(LNode *L, int e) {
     LNode *s = new LNode;  // 新建一个结点
@@ -122,6 +128,19 @@ bool Transform(LNode *L, int i) {
 }
 
 
+// 求表长
+int Length(LNode *L) {
+    LNode *p = L -> next;  // 新建一个指针 p ，指向第一个结点（不是头结点）
+    int length = 0;  // 设置一个计数器，表示当前表长
+
+    while(p) {
+        length++;
+        p = p -> next;;
+    }
+    return length;
+}
+
+
 // 遍历打印链表
 void PrintList(LNode *L) {
     LNode *p = L ->next;  // 新建一个指针p， 指向头结点后的第一个结点
@@ -133,31 +152,53 @@ void PrintList(LNode *L) {
 }
 
 
+// 销毁操作
+void DestroyList(LNode *&L) {
+    LNode *p = L -> next;  // 新建一个指针 p ，指向第一个结点
+    while(p) {
+        LNode *temp = p;  // 新建一个指针 temp ，指向第一个结点
+        p = p -> next;
+        delete temp;  // 删除结点
+    }
+    delete L;  // 删除头结点
+    L = nullptr;  // 头指针指向空
+}
+
+
 int main() {
     LNode *L;  // 创建一个单链表L
     InitList(L);  // 初始化单链表L
     int e;  // 用走返回值
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空
+    std::cout << "求表长：" << Length(L) << std::endl;  // 求表长
 
     HeadInsert(L, 1);  // 头插法插入1
     HeadInsert(L, 2);  // 头插法插入2
     HeadInsert(L, 3);  // 头插法插入3
+    std::cout << "输出：";
     PrintList(L);  // 遍历打印单链表
 
-    Transform(L, 3);
+    Transform(L, 3);  // 交换第三个结点
+    std::cout << "输出：";
     PrintList(L);  // 遍历打印单链表
 
     TailInsert(L, 4);  // 尾插法插入4
     TailInsert(L, 5);  // 尾插法插入5
     TailInsert(L, 6);  // 尾插法插入6
+    std::cout << "输出：";
     PrintList(L);  // 遍历打印单链表
 
-    ListDelete(L, 6, e);  // 删除第一个结点，并用e返回
+    ListDelete(L, 6, e);  // 删除第六个结点，并用e返回
+    std::cout << "输出：";
     PrintList(L);  // 遍历打印单链表
 
-    std::cout << GetElem(L, 1) << " ";  // 按位查找第一个位置
-    std::cout << LocateElem(L, 4) << " ";  // 按值查找 4
+    std::cout << "按位查找：" << GetElem(L, 1) << std::endl;  // 按位查找第一个位置
+    std::cout << "按值查找：" << LocateElem(L, 4) << std::endl;  // 按值查找 4
 
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
 
+    DestroyList(L);  // 销毁操作
 
     return 0;
 }
