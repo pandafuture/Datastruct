@@ -75,6 +75,64 @@ bool ListDelete(LNode *&L, int i, int &e) {
 }
 
 
+// 按值查找（查找第一个元素值为 e 的元素，并返回其位序，未找到则返回 0）
+int LocateElem(LNode *L, int e) {
+    LNode *p = L;  // 新建一个指针 p ，指向表中的第一个结点
+    int j = 1;  // 设置一个计数器，记录当前指向第几个结点，默认为 1 ，指向第一个结点
+
+    while(p) {
+        if(p -> data == e) 
+            return j;  // 若找到，则返回位序
+        p = p -> next;
+        j++;
+    }
+    return 0;
+}
+
+
+// 按位查找（查找表 L 中第 i 个位置的元素的值）
+int GetElem(LNode *L, int i) {
+    // 判断输入是否合法
+    if(i < 1)
+        return 0;
+    
+    LNode *p = L;  // 新建一个指针 p ，指向第一个结点
+    int j = 1;  // 设置一个计数器，记录当前指向的是第几个结点，默认为 1 ，指向第一个结点
+    while(p && j < i) {
+        p = p -> next;
+        j++;
+    }
+    if(!p)
+        return 0;
+    
+    return p -> data;  // 若找到了，就返回其值
+}
+
+
+// 判空操作
+bool Empty(LNode *L) {
+    if(!L)
+        return true;
+    return false;
+}
+
+
+// 求表长
+int Length(LNode *L) {
+    // 判断是否为空，若为空则返回 0
+    if(Empty(L))
+        return 0;
+
+    LNode *p = L;  // 新建一个指针，指向第一个节点
+    int length = 1;  // 设置一个计数器，表示当前指向第几个结点
+    while(p -> next) {
+        p = p -> next;
+        length++;
+    }
+    return length;
+}
+
+
 // 遍历打印单链表
 void PrintList(LNode *L) {
     LNode *p = L;  // 新建一个指针p，指向表中第一个结点
@@ -92,10 +150,16 @@ int main() {
 
     InitList(L);  // 初始化单链表
 
+    std::cout << Empty(L);  // 判空
+    std::cout << std::endl;
+
     ListInsert(L, 1, 1);  // 在第一个位置插入1
     ListInsert(L, 2, 2);  // 在第二个位置插入2
     ListInsert(L, 3, 3);  // 在第三个位置插入3
     PrintList(L);  // 遍历打印单链表
+    
+    std::cout << Length(L);  // 求表长
+    std::cout << std::endl;
 
     ListInsert(L, 2, 4);  // 在第二个位置插入4
     PrintList(L);
@@ -103,6 +167,17 @@ int main() {
     ListDelete(L, 2, e);  // 删除第二个结点，并用e返回
     PrintList(L);
     std::cout << e << " ";  // 打印e的值
+    std::cout << std::endl;
+
+    std::cout << Empty(L);  // 判空
+    std::cout << std::endl;
+
+    std::cout << Length(L);  // 求表长
+    std::cout << std::endl;
+
+    std::cout << LocateElem(L, 3);  // 按值查找第 3 个元素
+    std::cout << std::endl;
+    std::cout << GetElem(L, 2);  // 按位查找第 2 个元素
 
     return 0;
 }

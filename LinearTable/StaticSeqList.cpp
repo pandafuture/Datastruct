@@ -8,12 +8,16 @@ struct StaticSeqList {
 };
 
 
-
 // 初始化顺序表
-void InitList(StaticSeqList &L){
+void InitList(StaticSeqList &L) {
     L.length = 0; // 将顺序表的长度初始化为0，表示空表
 }
 
+
+// 判空
+bool Empty(StaticSeqList L) {
+    return L.length == 0;  // 返回表长是否为 0
+}
 
 
 // 在顺序表第i个元素插入元素e
@@ -35,7 +39,6 @@ bool ListInsert(StaticSeqList &L, int i, int e) {
 }
 
 
-
 // 删除顺序表第i个位置的元素，并用e返回
 bool ListDelete(StaticSeqList &L, int i, int &e) {
     // 判断删除位置是否合法， i必须在1~length之间
@@ -54,7 +57,6 @@ bool ListDelete(StaticSeqList &L, int i, int &e) {
 }
 
 
-
 // 按值查找：返回顺序表中第一个值为e的元素的位序，找不到返回0
 int LacateElem(StaticSeqList L, int e) {
     for(int i = 0; i < L.length; i++) {
@@ -65,12 +67,20 @@ int LacateElem(StaticSeqList L, int e) {
 }
 
 
-
 // 按位查找：返回顺序表中第i个元素的值
 int GetElem(StaticSeqList L, int i) {
+    // 判断输入是否合法
+    if(i < 1 || i > L.length)
+        return -1;
+
     return L.data[i - 1];  // 第i个元素存放在数组中的第i-1个位置
 }
 
+
+// 求表长
+int Length(StaticSeqList L) {
+    return L.length;
+}
 
 
 // 遍历打印顺序表
@@ -82,27 +92,45 @@ void PrintList(StaticSeqList L) {
 }
 
 
+// 清空静态顺序表
+void ClearList(StaticSeqList & L) {
+    L.length = 0;
+}
+
+
 int main(){
     StaticSeqList L;  // 新建一个静态顺序表L
     int e;  // 用来返回删除的值
+
     InitList(L);  // 初始化静态顺序表L
+
+    std::cout << "是否为空：" << Empty(L) << std::endl;  // 判空操作
 
     ListInsert(L, 1, 1);  // 在L的第一个位序插入1
     ListInsert(L, 2, 2);  // 在L的第二个位序插入2
     ListInsert(L, 3, 3);  // 在L的第三个位序插入3
     ListInsert(L, 4, 4);  
     ListInsert(L, 5, 5);
+    std::cout << "输出：";
     PrintList(L);  // 遍历打印顺序表
 
     ListDelete(L, 1, e);  // 删除L中的一号位置的元素，并返回其值
+    std::cout << "输出：";
     PrintList(L);  // 遍历打印顺序表
 
-    std::cout << LacateElem(L, 3);  // 按值查找操作
+    std::cout << "按值查找3: " << LacateElem(L, 3);  // 按值查找操作
     std::cout << std::endl;
 
-    std::cout << GetElem(L, 1) << " ";  // 按位查找第1个位序的元素
+    std::cout << "按位查找1: " << GetElem(L, 1);  // 按位查找第1个位序的元素
     std::cout << std::endl;
 
+    std::cout << "输出：";
     PrintList(L);  // 遍历打印顺序表
+    
+    std::cout << "是否为空：" << Empty(L) << std::endl;  // 判空操作
+
+    ClearList(L);  // 清空静态线性表
+    std::cout << "是否为空：" << Empty(L) << std::endl;  // 判空操作
+
     return 0;
 }

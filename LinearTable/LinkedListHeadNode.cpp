@@ -60,6 +60,40 @@ bool ListDelete(LNode *L, int i, int &e) {
 }
 
 
+// 按值查找（找到第一个值为 e 的元素的位序，找不到返回 0
+int LocateElem(LNode *L, int e) {
+    LNode *p = L -> next;  // 新建一个指针 p ，指向头结点后的第一个结点
+    int j = 1;  // 新建一个计数器，用来表示当前指向第几个结点，初始为 1 ，指向第一个结点
+    while(p) {
+        if(p -> data == e)
+            return j;  // 若找到则返回位序
+        j++;
+        p = p -> next;
+    }
+    return 0;  // 未找到
+}
+
+
+// 按位查找（返回表中第 i 个位置的元素的值）
+int GetElem(LNode *L, int i) {
+    // 先判断输入是否合法，查询位置不可以小于 0
+    if(i < 1)
+        return false;
+
+    LNode *p = L -> next;  // 新建一个指针 p ，指向头结点后的第一个结点
+    int j = 1;  // 新建一个计数器，用来表示当前指向第几个结点
+    // 找到第 i 个结点
+    while(p && j < i) {
+        j++;
+        p = p -> next;
+    }
+    if(!p)  // 如果没有找到第 i 个结点，说明超过了表长
+        return false;
+    
+    return p -> data;
+}
+
+
 // 交换位置（把第 i 个结点和前驱结点交换）
 bool Transform(LNode *L, int i) {
     if(i < 1) 
@@ -119,6 +153,9 @@ int main() {
 
     ListDelete(L, 6, e);  // 删除第一个结点，并用e返回
     PrintList(L);  // 遍历打印单链表
+
+    std::cout << GetElem(L, 1) << " ";  // 按位查找第一个位置
+    std::cout << LocateElem(L, 4) << " ";  // 按值查找 4
 
 
 
