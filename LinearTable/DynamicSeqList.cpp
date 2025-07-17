@@ -9,7 +9,6 @@ struct DynamicSeqList {
 };
 
 
-
 // 初始化动态顺序表，size为初始分配的大小
 void InitList (DynamicSeqList &L, int size) {
     L.data = (int *)malloc(size * sizeof(int));  // 申请size个大小为int的空间，并用malloc函数返回一个强制转换为int类型的指向这片空间开始地址的指针
@@ -19,6 +18,11 @@ void InitList (DynamicSeqList &L, int size) {
     L.maxSize = size;  // 记录最大容量
 }
 
+
+// 判空
+bool Empty(DynamicSeqList L) {
+    return L.length == 0;
+}
 
 
 // 增加动态顺序表的容量（增加len个长度）
@@ -36,7 +40,6 @@ void IncreaseSize(DynamicSeqList &L, int len) {
     L.maxSize += len;  // 更新最大容量
     free(p);  // 释放原空间
 }
-
 
 
 // 在顺序表第i个位置插入元素e
@@ -58,7 +61,6 @@ bool ListInsert(DynamicSeqList &L, int i, int e) {
 }
 
 
-
 // 删除表中第i个元素，并用e返回
 bool ListDelete(DynamicSeqList &L, int i, int &e) {
     // 判断删除位置是否合法，i必须要在1~length之间
@@ -76,7 +78,6 @@ bool ListDelete(DynamicSeqList &L, int i, int &e) {
 }
 
 
-
 // 按值查找：找到第一个值为e的元素的位序，找不到返回0
 int LocateElem(DynamicSeqList L, int e) {
     for(int i = 0; i < L.length; i++) {
@@ -87,12 +88,16 @@ int LocateElem(DynamicSeqList L, int e) {
 }
 
 
-
 // 按位查找：返回列表中第i个元素的值
 int GetElem(DynamicSeqList L, int i) {
     return L.data[i -1];
 }
 
+
+// 求表长
+int Length(DynamicSeqList L) {
+    return L.length;
+}
 
 
 // 遍历打印顺序表
@@ -102,7 +107,15 @@ void PrintList(DynamicSeqList L) {
     }
     std::cout << std::endl;
 }
+ 
 
+// 销毁操作
+void DestroyList(DynamicSeqList &L) {
+    free(L.data);
+    L.data = nullptr;
+    L.length = 0;
+    L.maxSize = 0;
+}
 
 
 int main(){
@@ -110,24 +123,38 @@ int main(){
     InitList(L ,5);  // 初始化
     int e;
 
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空操作
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
+
     ListInsert(L, 1, 1);  // 在第一个位置插入 1
     ListInsert(L, 2, 2);
     ListInsert(L, 3, 3);
     ListInsert(L, 4, 4);
     ListInsert(L, 5, 5);
 
+    std::cout << "输出：";
     PrintList(L);  // 打印顺序表
 
-    ListDelete(L, 2, e);
+    ListDelete(L, 2, e);  // 删除操作
+    std::cout << "输出：";
     PrintList(L);
 
-    ListInsert(L, 2, 2);
+    ListInsert(L, 2, 2);  // 插入操作
+    std::cout << "输出：";
     PrintList(L);
 
     ListInsert(L, 6, 6);  // 在超过表长的位置插入 6
+    std::cout << "输出：";
     PrintList(L);
 
-    std::cout << LocateElem(L, 3) << " ";  // 找到第一个值为 3 的位序
+    std::cout << "按值查找：" << LocateElem(L, 3) << std::endl;  // 找到第一个值为 3 的位序
 
-    std::cout << GetElem(L, 6);  // 找到第六个元素的值
+    std::cout << "按位查找：" << GetElem(L, 6) << std::endl;  // 找到第六个元素的值
+
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空操作
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
+
+    DestroyList(L);  // 销毁操作
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空操作
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
 }
