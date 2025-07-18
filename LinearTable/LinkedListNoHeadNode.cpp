@@ -13,6 +13,12 @@ void InitList(LNode *&L) {
 }
 
 
+// 判空操作
+bool Empty(LNode *L) {
+    return L == nullptr;
+}
+
+
 // 插入操作，在第i个位置插入e
 bool ListInsert(LNode *&L, int i, int e) {
     if(i < 1) {
@@ -109,14 +115,6 @@ int GetElem(LNode *L, int i) {
 }
 
 
-// 判空操作
-bool Empty(LNode *L) {
-    if(!L)
-        return true;
-    return false;
-}
-
-
 // 求表长
 int Length(LNode *L) {
     // 判断是否为空，若为空则返回 0
@@ -144,40 +142,53 @@ void PrintList(LNode *L) {
 }
 
 
+// 销毁操作
+void DestroyList(LNode *&L) {
+    LNode *p = L;  // 新建一个指针 p ，指向第一个结点
+    while(p) {
+        LNode *temp = p;  // 新建一个指针 temp ，指向 p 指向的结点
+        p = p -> next;
+        delete temp;  // 删除 temp 指向的结点
+    }
+    L = nullptr;  // 头指针指向空
+}
+
+
 int main() {
     LNode *L;  // 新建一个单链表（不带头结点）
     int e;
 
     InitList(L);  // 初始化单链表
 
-    std::cout << Empty(L);  // 判空
-    std::cout << std::endl;
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
 
     ListInsert(L, 1, 1);  // 在第一个位置插入1
     ListInsert(L, 2, 2);  // 在第二个位置插入2
     ListInsert(L, 3, 3);  // 在第三个位置插入3
+    std::cout << "输出：";
     PrintList(L);  // 遍历打印单链表
     
-    std::cout << Length(L);  // 求表长
-    std::cout << std::endl;
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
 
     ListInsert(L, 2, 4);  // 在第二个位置插入4
+    std::cout << "输出：";
     PrintList(L);
 
     ListDelete(L, 2, e);  // 删除第二个结点，并用e返回
+    std::cout << "输出：";
     PrintList(L);
-    std::cout << e << " ";  // 打印e的值
-    std::cout << std::endl;
+    std::cout << "删除：" << e << std::endl;  // 打印e的值
 
-    std::cout << Empty(L);  // 判空
-    std::cout << std::endl;
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空
 
-    std::cout << Length(L);  // 求表长
-    std::cout << std::endl;
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
 
-    std::cout << LocateElem(L, 3);  // 按值查找第 3 个元素
-    std::cout << std::endl;
-    std::cout << GetElem(L, 2);  // 按位查找第 2 个元素
+    std::cout << "按值查找：" << LocateElem(L, 3) << std::endl;  // 按值查找第 3 个元素
+
+    std::cout << "按位查找：" << GetElem(L, 2) << std::endl;  // 按位查找第 2 个元素
+
+    DestroyList(L);
 
     return 0;
 }
