@@ -74,6 +74,50 @@ bool ListDelete(CNode *L, int i, int &e) {
 }
 
 
+// 按值查找
+int LocateElem(CNode *L, int e) {
+    CNode *p = L -> next;  // 新建一个指针 p ，指向第一个结点
+    int j = 1;  // 设置一个计数器，记录当前指向第几个结点
+    while(p != L) {
+        if(p -> data == e)
+            return j;  // 如果找到就返回位序
+        p = p -> next;
+        j++;
+    }
+    return 0;  // 若没找到就返回 0
+}
+
+
+// 按位查找
+int GetElem(CNode *L, int i) {
+    // 判断输入是否合法，不能小于 1
+    if(i < 1)
+        return -1;
+    
+    CNode *p = L -> next;  // 新建一个指针 p ，指向第一个结点
+    int j = 1;  // 设置一个计数器，记录当前指向第几个结点
+    while(p != L && j < i) {
+        p = p -> next;
+        j++;
+    }
+    if(p == L)
+        return -1;  // 如果为找到就返回 -1
+    return p -> data;  // 如果找到了就返回其值
+}
+
+
+// 求表长
+int Length(CNode *L) {
+    int length = 0;  // 设置一个表长计数器
+    CNode *p = L -> next;  // 新建一个指针 p ，指向第一个结点
+    while(p != L) {
+        length++;
+        p = p -> next;
+    }
+    return length;  // 返回最终表长
+}
+
+
 // 遍历打印循环单链表
 void PrintList(CNode *L) {
     CNode *p = L -> next;  // 新建一个指针 p ，指向第一个结点
@@ -85,27 +129,56 @@ void PrintList(CNode *L) {
 }
 
 
+// 销毁操作
+void DestroyList(CNode *&L) {
+    CNode *p = L -> next;  // 新建一个指针 p ，指向第一个结点
+    while(p != L) {
+        CNode *temp = p;  // 新建一个指针 temp ，指向 p 指向的结点
+        p = p -> next;
+        delete temp;  // 删除 temp 指向的结点
+    }
+    delete L;  // 删除头结点
+    L = nullptr;  // 把头指针置为空
+}
+
+
 // 测试
 int main() {
     CNode *L;  // 创建一个循环单链表 L
     int e;
     InitList(L);  // 初始化
 
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
+
     ListInsert(L, 1, 1);  // 在 L 的第 1 个位置插入 1
     ListInsert(L, 2, 2);
     ListInsert(L, 3, 3);
+    std::cout << "输出：";
     PrintList(L);  // 打印链表
 
     ListInsert(L, 1, 4);
+    std::cout << "输出：";
     PrintList(L);
     ListInsert(L, 5, 5);
+    std::cout << "输出：";
     PrintList(L);
-    ListInsert(L, 7, 6);
+    ListInsert(L, 6, 6);
+    std::cout << "输出：";
     PrintList(L);
 
     ListDelete(L, 6, e);  // 删除 L 的第 1 个结点，并用 e 返回
+    std::cout << "输出：";
     PrintList(L);
-    std::cout << e << " ";
+    std::cout << "删除：" << e << std::endl;
+
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
+
+    std::cout << "按值查找：" << LocateElem(L, 3) << std::endl;  // 按值查找
+    std::cout << "按位查找: " << GetElem(L, 2) << std::endl;  // 按位查找
+
+    DestroyList(L);  // 销毁
 
     return 0;
 }
