@@ -16,6 +16,12 @@ void InitList(CDNode *&L) {
 }
 
 
+// 判空
+bool Empty(CDNode *L) {
+    return L -> next == L;  // 返回头结点的 next 是否指向自己
+}
+
+
 // 插入（在第 i 个位置，插入结点 e）
 bool ListInsert(CDNode *L, int i, int e) {
     // 判断输入是否合法，插入位置 i 不能为 0
@@ -68,6 +74,52 @@ bool ListDelete(CDNode *L, int i, int &e) {
 }
 
 
+// 按值查找
+int LocateElem(CDNode *L, int e) {
+    CDNode *p = L -> next;  // 新建一个指针 P ，指向第一个结点
+    int j = 1;  // 设置一个计数器，记录当前指向第几个结点，默认为 1 ，指向第一个结点
+    while(p != L) {
+        if(p -> data == e)
+            return j;  // 如果值为 e ，就返回其位序
+        p = p -> next;
+        j++;
+    }
+    return 0;  // 若没找到就返回 0
+}
+
+
+// 按位查找
+int GetElem(CDNode *L, int i) {
+    // 判断输入是否合法
+    if(i < 1)
+        return -1;
+    
+    CDNode *p = L -> next;  // 新建一个指针 P ，指向第一个结点
+    int j = 1;  // 设置一个计数器，记录当前指向第几个结点
+    // 遍历找到第 i 个结点
+    while(p != L && j < i) {
+        p = p -> next;
+        j++;
+    }
+    if(p == L)
+        return -1;  // 查找位置超出表长
+    
+    return p -> data;  // 返回第 i 个结点的值
+}
+
+
+// 求表长
+int Length(CDNode *L) {
+    int length = 0;  // 设置一个计数器，记录表长
+    CDNode *p = L -> next;  // 新建一个指针，指向第一个结点
+    while(p != L) {
+        length++;
+        p = p -> next;
+    }
+    return length;  // 返回最终表长
+}
+
+
 // 遍历打印循环双链表
 void PrintList(CDNode *L) {
     CDNode *p = L -> next;  // 设置一个指针 p ，指向第一个结点
@@ -78,35 +130,70 @@ void PrintList(CDNode *L) {
     std::cout << std::endl;  // 换行
 }
 
+
+// 销毁操作
+void DestroyList(CDNode *&L) {
+    CDNode *p = L -> next;  // 新建一个指针 p ，指向第一个结点
+    // 遍历整个链表
+    while(p != L) {
+        CDNode *temp = p;  // 新建一个指针 temp ，指向 p 指向的结点
+        p = p -> next;
+        delete temp;  // 删除 temp 指向的结点
+    }
+    delete L;  // 删除头结点
+    L = nullptr;  // 头指针置为空
+}
+
+
 // 测试
 int main() {
     CDNode *L;  // 新建一个循环双链表
     int e;
     InitList(L);  // 初始化
 
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
+
     ListInsert(L, 1, 1);  // 在 L 的第 1 个位置插入 1
     ListInsert(L, 2, 2);
     ListInsert(L, 3, 3);
+    std::cout << "输出：";
     PrintList(L);  // 打印 L 
 
     ListInsert(L, 1, 4);
+    std::cout << "输出：";
     PrintList(L);
     ListInsert(L, 2, 5);
+    std::cout << "输出：";
     PrintList(L);
     ListInsert(L, 6, 6);
+    std::cout << "输出：";
     PrintList(L);
     ListInsert(L, 8, 7);
+    std::cout << "输出：";
     PrintList(L);
 
-    ListDelete(L, 1, e);
+    ListDelete(L, 1, e);  // 删除第 1 个位置的元素
+    std::cout << "删除第一个结点：";
     PrintList(L);
     ListDelete(L, 2, e);
+    std::cout << "删除第二个结点: ";
     PrintList(L);
     ListDelete(L, 4, e);
+    std::cout << "删除第四个结点：";
     PrintList(L);
 
     ListDelete(L, 4, e);
+    std::cout << "删除第四个结点：";
     PrintList(L);
-    
+
+    std::cout << "判空：" << Empty(L) << std::endl;  // 判空
+    std::cout << "表长：" << Length(L) << std::endl;  // 求表长
+
+    std::cout << "按值查找：" << LocateElem(L, 3) << std::endl;  // 按值查找 3
+    std::cout << "按位查找：" << GetElem(L, 2) << std::endl;  // 按位查找 2
+
+    DestroyList(L);  // 销毁
+
     return 0;
 }
