@@ -60,7 +60,7 @@ bool FullOpStack(OpStack S) {
 // 操作数入栈
 bool PushNum(NumStack &S, int e) {
     // 先判断栈是否已满
-    if(EmptyNumStack(S)) {
+    if(FullNumStack(S)) {
         std::cout << "操作数栈已满" << std::endl;
         return false;
     }
@@ -73,12 +73,12 @@ bool PushNum(NumStack &S, int e) {
 // 运算符入栈
 bool PushOp(OpStack &S, char e) {
     // 先判断栈是否已满
-    if(EmptyOpStack(S)) {
+    if(FullOpStack(S)) {
         std::cout << "运算符栈已满" << std::endl;
         return false;
     }
 
-    S.data[++S.top];  // 栈顶指针先加一，再入栈
+    S.data[++S.top] = e;  // 栈顶指针先加一，再入栈
     return true;
 }
 
@@ -100,7 +100,7 @@ bool PopNum(NumStack &S, int &e) {
 bool PopOp(OpStack &S, char &e) {
     // 先判断操作数栈是否为空
     if(EmptyOpStack(S)) {
-        std::cout << "操作数栈为空" <<std::endl;
+        std::cout << "运算符栈为空" <<std::endl;
         return false;
     }
 
@@ -124,9 +124,9 @@ bool GetTopNum(NumStack S, int &e) {
 
 // 读运算符栈栈顶元素
 bool GetTopOp(OpStack S, char &e) {
-    // 先判断操作符栈是否为空
+    // 先判断运算符栈是否为空
     if(EmptyOpStack(S)) {
-        std::cout << "操作符栈为空" <<std::endl;
+        std::cout << "运算符栈为空" <<std::endl;
         return false;
     }
 
@@ -168,7 +168,7 @@ int calculate(int a, int b, char op) {
                 exit(EXIT_FAILURE);
             }
             return a / b;
-        // 如果是其他操作符，就
+        // 如果是其他操作符，就退出
         default:
             std::cerr << "错误：非法操作符" << std::endl;
             exit(EXIT_FAILURE);
@@ -177,7 +177,7 @@ int calculate(int a, int b, char op) {
 
 
 // 中缀表达式求值函数
-int EvaluateExpression(std::string &expr) {
+int EvaluateExpression(std::string expr) {
     NumStack numStack;  // 声明操作数栈
     OpStack opStack;  // 声明运算符栈
 
@@ -187,6 +187,7 @@ int EvaluateExpression(std::string &expr) {
     int i = 0;  // 作为计数器
     int length = expr.length();  // 获取字符串长度
 
+    // 从左往右扫描中缀表达式，直到扫描完所有元素
     while(i < length) {
         // 跳过空格
         if(expr[i] == ' ') {
@@ -207,7 +208,7 @@ int EvaluateExpression(std::string &expr) {
                 num = num * 10 + (expr[i] - '0');
                 i++;
             }
-            PushNum(numStack, num);  // 将操作数压入栈中
+            PushNum(numStack, num);  // 将操作数压入操作数栈中
         }
         // 处理左括号
         else if(expr[i] == '(') {
@@ -221,7 +222,63 @@ int EvaluateExpression(std::string &expr) {
             char op;
             while(GetTopOp(opStack, op) && op != '(') {
                 PopOp(opStack, op);  // 弹出运算符栈栈顶
+
+                int b, a;  // 存储操作数
+                PopNum(numStack, b);  // 弹出右操作数
+                PopNum(numStack, a);  // 弹出左操作数
+                int result = calculate(a, b, op);  // 计算
+                PushNum(numStack, result);  // 将计算结果压入操作数栈
             }
+            PopOp(opStack, op);  // 弹出左括号
+            i++;
+        }
+        // 处理运算符
+        else {
+            char currentOp = expr[i];  // 存储当前扫描到的运算符
+            char topOp;  // 存储运算符栈的栈顶运算符
+
+            // 先把运算符栈中优先级高于或等于当前运算符的所有运算符弹出，并弹出两个操作数，执行计算，运算结果再压入操作数栈
+            // 直到碰到左括号或栈空则停止
+            while(GetTopOp(opStack, topOp) && topOp != '(' && GetPriority(currentOp) <= GetPriority(topOp)) {
+                PopOp(opStack, topOp);  // 弹出栈顶运算符
+                int b, a;  // 存储操作数
+                PopNum(numStack, b);  // 弹出右操作数
+                PopNum(numStack, a);  // 弹出左操作数
+                int result = calculate(a, b, topOp);  // 计算
+                PushNum(numStack, result);  // 结果入栈
+            }
+            // 最后把当前运算符入栈
+            PushOp(opStack, currentOp);
+            i++;
         }
     }
+
+    // 扫描完整个表达式后，依次处理栈中剩余运算符，直到运算符栈为空
+    while(!EmptyOpStack(opStack)) {
+        char op;
+        PopOp(opStack, op);  // 把栈中栈顶运算符弹出
+        int b, a;  // 存储操作数
+        PopNum(numStack, b);  // 弹出右操作数
+        PopNum(numStack, a);  // 弹出左操作数
+        int result = calculate(a, b, op);  // 计算
+        PushNum(numStack, result);  // 把结果入栈
+    }
+
+    // 返回最终结果
+    int finalResult;
+    PopNum(numStack, finalResult);  // 将最终结果出栈
+    return finalResult;
+}
+
+
+// 测试
+int main() {
+    std::string expr = "3 + 4 * (2 - 1)";  // 中缀表达式
+
+    std::cout << "中缀表达式为：" << expr << std::endl;
+
+    int result = EvaluateExpression(expr);  // 计算中缀表达式
+    std::cout << "计算结果为：" << result << std::endl;
+
+    return 0;
 }
