@@ -1,5 +1,5 @@
 #include <iostream>
-#include <vector>
+#include <vector>  // 引入动态数组头文件
 
 
 // 动态数组
